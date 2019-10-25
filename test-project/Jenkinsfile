@@ -1,0 +1,15 @@
+pipeline {
+  agent any
+
+  tools {
+    git 'Default'
+    jdk 'jdk8'
+    maven 'maven3'
+  }
+
+  stages {
+    stage('build') {
+      sh 'mvn -f test-project/pom.xml clean package'
+    }
+  }
+}
