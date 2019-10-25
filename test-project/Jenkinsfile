@@ -8,9 +8,20 @@ pipeline {
   }
 
   stages {
-    stage('build') {
+    stage('build project') {
       steps {
         sh 'mvn -f test-project/pom.xml clean package'
+      }
+    }
+
+    stage('build and deploy docker image') {
+      steps {
+        script {
+          docker.withRegistry('https://${NEXUS_SERVICE_HOST}:${NEXUS_SERVICE_PORT_DOCKER_REGISTRY_PORT}', 'docker-credentials') {
+            def image = docker.build("test-project:${env.BUILD_ID}")
+            image.push()
+          }
+        }
       }
     }
   }
