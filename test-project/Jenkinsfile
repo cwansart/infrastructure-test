@@ -5,6 +5,7 @@ pipeline {
     git 'Default'
     jdk 'jdk8'
     maven 'maven3'
+    docker 'docker'
   }
 
   stages {
