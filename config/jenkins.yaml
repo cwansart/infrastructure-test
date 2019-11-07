@@ -25,7 +25,7 @@ spec:
     - ReadWriteOnce
   resources:
     requests:
-      storage: 2Gi
+      storage: 1Gi
 ---
 apiVersion: apps/v1
 kind: Deployment
@@ -46,9 +46,10 @@ spec:
       containers:
         - image: cwansart/preconfigured-jenkins
           name: jenkins
+          imagePullPolicy: Always
           volumeMounts:
             - name: jenkins-volume
-              mountPath: /var/jenkins_home
+              mountPath: /home/jenkins
       volumes:
         - name: jenkins-volume
           persistentVolumeClaim:

@@ -14,6 +14,19 @@ spec:
     app: jenkins-agent
   type: ClusterIP
 ---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  labels:
+    app: jenkins-agent
+  name: jenkins-agent-volume-claim
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 2Gi
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -31,6 +44,15 @@ spec:
         app: jenkins-agent
     spec:
       containers:
-        - image: cwansart/jenkins-podman-slave:1-autoconnect
+        - image: cwansart/jenkins-podman-slave:3
           name: jenkins-podman-slave
           imagePullPolicy: Always
+          securityContext:
+            - privileged
+          volumeMounts:
+            - name: jenkins-agent-volume
+              mountPath: /var/lib/containers/storage
+      volumes:
+        - name: jenkins-agent-volume
+          persistentVolumeClaim:
+            claimName: jenkins-agent-volume-claim
